@@ -1,16 +1,24 @@
-# This is a sample Python script.
+from typing import List
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from user_spider import UserSpider
+from video_spider import VideoSpider
+from rank_spider import RankSpider
+from video_following_spider import VideoFollowingSpider
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    rankSpider = RankSpider()
+    videoFollowingSpider = VideoFollowingSpider()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    rankSpider.start()
+    videoFollowingSpider.start()
+
+    # 可以多线程加速
+    userSpiders: List = [UserSpider()] * 1
+    videoSpiders: List = [VideoSpider()] * 1
+
+    for userSpider in userSpiders:
+        userSpider.start()
+    for videoSpider in videoSpiders:
+        videoSpider.start()
+
+
