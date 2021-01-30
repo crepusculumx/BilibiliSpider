@@ -61,13 +61,17 @@ class VideoGet(DBTool):
 
 class VideoSpider(Spider):
     data_queue = Queue()
+    tracked_videos = Queue()
+    videoSave = VideoSave(data_queue)
+    videoGet = VideoGet(tracked_videos)
 
     def __init__(self):
         Spider.__init__(self)
         self.tracked_videos: Queue = Queue()
-
-        VideoSave(self.data_queue).start()
-        VideoGet(self.tracked_videos).start()
+        if not self.videoSave.is_alive():
+            self.videoSave.start()
+        if not self.videoGet.is_alive():
+            self.videoGet.start()
 
     def __fetch_demand(self) -> str:
         if not self.tracked_videos.empty():

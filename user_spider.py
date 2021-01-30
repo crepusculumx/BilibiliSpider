@@ -60,13 +60,16 @@ class UserGet(DBTool):
 
 class UserSpider(Spider):
     data_queue = Queue()
+    tracked_users = Queue()
+    userSave = UserSave(data_queue)
+    userGet = UserGet(tracked_users)
 
     def __init__(self):
         Spider.__init__(self)
-        self.tracked_users: Queue = Queue()
-
-        UserSave(self.data_queue).start()
-        UserGet(self.tracked_users).start()
+        if not self.userGet.is_alive():
+            self.userGet.start()
+        if not self.userSave.is_alive():
+            self.userSave.start()
 
     def __fetch_demand(self) -> int:
         if not self.tracked_users.empty():

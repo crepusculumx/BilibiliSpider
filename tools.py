@@ -1,3 +1,4 @@
+import contextlib
 import time
 from queue import Queue
 from threading import Thread
@@ -20,7 +21,8 @@ class DBTool(Thread):
 
     def run(self) -> None:
         while True:
-            self.work()
+            with contextlib.suppress(Exception):  # 压制异常
+                self.work()
             time.sleep(self.period)
 
 
